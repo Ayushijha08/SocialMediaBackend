@@ -7,6 +7,7 @@ const app = express()
 const PORT = process.env.PORT || 8000;
 // const dbConnect = require("./dbConnection");
 const mongoose = require("mongoose");
+const userRouter = require("./routers/userRouter");
 // const { configDotenv } = require('dotenv');
 
 
@@ -14,6 +15,8 @@ const mongoose = require("mongoose");
 app.use(express.json())  // body-parser
 app.use(express.urlencoded({extended: true}))
 
+// defining the routers
+app.use('/user', userRouter)
 
 app.get("/yo", async (req, res) => {
     // return res.send(200).json({message: "api got hit", success: true})
