@@ -26,4 +26,17 @@ const createUser = async ({ name, email, password, username }) => {
 
 }
 
-module.exports = createUser
+const findUser = async (loginKey) => {  // loginKey could be either email or username
+    return new Promise(async (resolve, reject) => {
+        const userExists = await userSchema.findOne({
+            $or: [{ email: loginKey }, { username: loginKey }]
+        }).select("+password")
+
+        if (!userExists) {
+            reject("User doesn't exist")
+        }
+        resolve(userExists)
+    })
+}
+
+module.exports = {createUser, findUser}
