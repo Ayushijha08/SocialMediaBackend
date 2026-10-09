@@ -8,10 +8,22 @@ const PORT = process.env.PORT || 8000;
 // const dbConnect = require("./dbConnection");
 const mongoose = require("mongoose");
 const userRouter = require("./routers/userRouter");
+const session = require('express-session')
+const mongoSession = require('connect-mongodb-session')
+const store = new mongoSession({
+    uri: process.env.MONGO_URI,
+    collection: "sessions"
+})
 // const { configDotenv } = require('dotenv');
 
 
 // app.use -> you're using a middleware
+app.use(session({
+    secret: process.env.SECRET_KEY,
+    store: store,
+    resave: false,
+    saveUninitialized: fasle
+}))
 app.use(express.json())  // body-parser
 app.use(express.urlencoded({extended: true}))
 

@@ -26,11 +26,25 @@ const loginController = async (req, res) => {
         const isPasswordMatched = await bcrypt.compare(password, userInfo.password)  // bcrypt.compare returns a booelan
         if(!isPasswordMatched) return res.status(400).json({success: false, message: "Incorrect password"})
         // session based authentication
-        
-
+        // at this point, we need to initiate a fresh session
+        req.session.isAuth = true
+        req.session.user = {
+            username: userInfo.username,
+            email: userInfo.email,
+            userID: userInfo._id
+        }
+        return res.status(200).json({message: 'Login Successful!' })
+        // session = {isAuth: true, user: {...}}
     } catch (error) {
         return res.status(500).json({sucess: false, message: "Internal server error", error: error})
     }
 }
 
-module.exports = {userRegisterController, loginController}
+const logoutController = async (req, res) => {
+    req.session.destroy((err) => {
+        if(err) return res.status(500).json({mesaage: "Logout Unsuccessful!"})
+        return res.staus(200).json({message: "Logout successful"})
+    })
+}
+
+module.exports = {userRegisterController, loginController, logoutController}
